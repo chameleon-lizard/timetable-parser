@@ -15,18 +15,18 @@ def get_cells(sheet):
 def get_group(cells, num):
     return cells[num]
 
-def get_day(cells, num):
-    num += 2
-    day_raw = [[cells[i][num + j] for i in range(len(cells))] for j in range(9)]
-    day = [
-            [
-                [
-                    str(day_raw[i][j])[str(day_raw[i][j]).index(':')+1:].replace("'", ''), 
-                    str(day_raw[i+1][j])[str(day_raw[i+1][j]).index(':')+1:].replace("'", ''), 
-                    str(day_raw[0][j])[str(day_raw[0][j]).index(':')+1:].replace("'", '')
-                ] for j in range(len(day_raw[i]))
-            ] for i in range(1, len(day_raw), 2)
-        ]
+def get_day(sheet, num):
+    day_dirty = [[i for i in sheet.row_values(j)] for j in range(2+num*9, 11+num*9)]
+    day = [day_dirty[0]]
+    for i in range(1, len(day_dirty) - 1, 2):
+        day.append(day_dirty[i][0])
+        if i == 0:
+            day.append(day_dirty[i])
+            continue
+        else:
+            for j in range(1, len(day_dirty[i])):
+                day.append([day_dirty[i][j], day_dirty[i+1][j]])
+
     return day
 
 printer = pp.PrettyPrinter()
@@ -34,5 +34,5 @@ book = get_book('test.xls')
 second = get_sheet(book, 1)
 cells = get_cells(second)
 seven = get_group(cells, 1)
-tuesday = get_day(cells, 1)
-printer.pprint(tuesday)
+day = get_day(second, 1)
+printer.pprint(day)

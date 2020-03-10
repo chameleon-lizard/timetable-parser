@@ -2,7 +2,5 @@
 Python API for parsing timetables in XLS.
 
 ## Dependencies
-- xlsx2csv
-'''
-pip install xlsx2csv --user
-'''
+- xlrd
+- pprint - for demonstration purposes
